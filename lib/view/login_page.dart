@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_oauth/Actions/actions.dart';
+import 'package:google_oauth/view/home_page.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class Login_Page extends StatefulWidget {
@@ -26,16 +27,14 @@ class _Login_PageState extends State<Login_Page> {
   }
 
   void _login() async {
-    // Create an instance of Authenti with FirebaseAuth and GoogleSignIn
     final authAction =
         Authenti(auth01: FirebaseAuth.instance, googleSignIn: GoogleSignIn());
-    // Attempt Google Sign-In
     final user = await authAction.signInWithGoogle();
     if (user != null) {
-      // Navigate to the Home Page on successful login
-      Navigator.pushReplacementNamed(context, '/home');
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Home_Page()));
+      // Navigator.pushReplacementNamed(context, '/home');
     } else {
-      // Handle sign-in failure (optional)
       print("Google Sign-In failed");
     }
   }
@@ -103,7 +102,7 @@ class _Login_PageState extends State<Login_Page> {
                   backgroundColor:
                       MaterialStateProperty.all<Color>(Colors.blueAccent),
                 ),
-                onPressed: _login, // Trigger login function
+                onPressed: _login,
                 child: Text(
                   "Login with google",
                   style: TextStyle(fontSize: 20, color: Colors.white),

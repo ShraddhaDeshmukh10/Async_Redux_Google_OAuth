@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
               authentication: FirebaseAuth.instance,
               google: GoogleSignIn(),
             ),
-        '/home': (context) => const Home_Page(),
+        '/home': (context) => Home_Page(),
       },
     );
   }
