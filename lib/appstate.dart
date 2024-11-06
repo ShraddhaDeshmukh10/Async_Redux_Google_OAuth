@@ -1,20 +1,24 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_oauth/Model/currentuser.dart';
 
 class AppState {
-  final FirebaseAuth auth01;
-  final GoogleSignIn googleSignIn;
-  AppState({required this.auth01, required this.googleSignIn});
+  final CurrentUser? currentUser;
+  AppState({this.currentUser});
 
   AppState copy({
-    FirebaseAuth? auth01,
-    GoogleSignIn? googleSignIn,
+    CurrentUser? currentUser,
   }) {
     return AppState(
-        auth01: auth01 ?? this.auth01,
-        googleSignIn: googleSignIn ?? this.googleSignIn);
+      currentUser: currentUser ?? this.currentUser,
+    );
   }
 
-  static AppState initialState() =>
-      AppState(auth01: FirebaseAuth.instance, googleSignIn: GoogleSignIn());
+  static AppState initialState() => AppState(currentUser: null);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AppState && currentUser == other.currentUser;
+
+  @override
+  int get hashCode => currentUser.hashCode;
 }

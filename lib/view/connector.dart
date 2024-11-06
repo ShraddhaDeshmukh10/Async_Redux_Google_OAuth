@@ -1,41 +1,39 @@
 import 'package:async_redux/async_redux.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_oauth/Actions/actions.dart';
+import 'package:google_oauth/Model/currentuser.dart';
 import 'package:google_oauth/appstate.dart';
 import 'package:google_oauth/view/login_page.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthServiceConnector extends StatelessWidget {
-  const AuthServiceConnector({super.key});
+  final CurrentUser? currentUser;
+  const AuthServiceConnector({super.key, this.currentUser});
 
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, ViewModel>(
-      vm: () => Factory(),
-      builder: (context, vm) => Login_Page(
-        authentication: vm.auth01,
-        google: vm.googleSignIn,
-      ),
+      vm: () => Factory(this),
+      builder: (context, vm) => LoginPage(googleSignIn: vm.googleSignIn),
     );
   }
 }
 
 class ViewModel extends Vm {
-  final FirebaseAuth auth01;
-  final GoogleSignIn googleSignIn;
+  final void Function() googleSignIn;
+  final CurrentUser currentUser;
 
   ViewModel({
-    required this.auth01,
     required this.googleSignIn,
-  }) : super(equals: [auth01, googleSignIn]);
+    required this.currentUser,
+  }) : super(equals: [currentUser]);
 }
 
 class Factory extends VmFactory<AppState, AuthServiceConnector, ViewModel> {
-  Factory();
+  Factory(connector) : super(connector);
 
   @override
-  ViewModel fromStore() => ViewModel(
-        auth01: state.auth01,
-        googleSignIn: state.googleSignIn,
+  ViewModel? fromStore() => ViewModel(
+        currentUser: state.currentUser ?? CurrentUser(),
+        googleSignIn: () => dispatch(Authenti()),
       );
 }
