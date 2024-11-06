@@ -7,20 +7,16 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class Authenti extends ReduxAction<AppState> {
   @override
-  Future<AppState> reduce() async {
+  Future<AppState?> reduce() async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) {
-        print("Sign-in aborted by user.");
-        return state;
-      }
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
 
       final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
       );
 
       UserCredential userCredential =
@@ -37,7 +33,7 @@ class Authenti extends ReduxAction<AppState> {
       }
     } catch (error) {
       print("Error during Google sign-in: $error");
-      return state;
+      return state.copy(currentUser: CurrentUser());
     }
   }
 }
